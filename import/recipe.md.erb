@@ -1,0 +1,20 @@
+---
+title: <%= @title %>
+categories: <%= @category %>
+---
+
+## Ingredients
+
+<%- @ingredient_groups.each do |ingredient_group| -%>
+  <%- unless ingredient_group["@title"].nil? -%>
+### <%= ingredient_group["@title"] %>
+
+  <%- end -%>
+  <%- ingredient_group["ingredient"].each do |ingredient| -%>
+- <%= ingredient %>
+  <%- end %>
+<%- end -%>
+## Preparation
+
+<%= @instructions %>
+
