@@ -25,6 +25,6 @@ end
 
 cookbook["cookbook"]["recipe"].each do |recipe_hash|
   recipe = Recipe.new(recipe_hash)
-  IO.write(File.join("..", "#{recipe.parameterized_title}.md"), recipe.to_markdown)
+  IO.write(File.join("..", "recipes", "#{recipe.parameterized_title}.md"), recipe.to_markdown)
 end
 
