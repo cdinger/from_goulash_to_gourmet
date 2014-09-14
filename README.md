@@ -8,8 +8,7 @@ The master recipes are markdown files in the `recipes` directory. Just follow th
 
 ### YAML front-matter
 
-`title` and `category` (chapter) go a recipe's YAML front matter for natice compatibility with Jekyll. For building the PDF and 
-other artifacts, these are tranlsated accordingly.
+`title` and `category` (chapter) go a recipe's YAML front matter for native compatibility with Jekyll. For building the PDF and other artifacts, these are tranlsated accordingly.
 
 ### Recipe structure
 
@@ -41,7 +40,7 @@ haven't released a binary update since 2012.
 
 - Install Pandoc: `brew install pandoc`
 - Install FOP snapshot (from within the `export` directory): `svn co http://svn.apache.org/repos/asf/xmlgraphics/fop/trunk/ fop`
-- Build FOP: `ant`
+- Build FOP: `cd fop && ant`
 
 Build (must be run from the `export` directory): `./build.sh`
 
