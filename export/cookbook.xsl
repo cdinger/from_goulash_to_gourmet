@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
+  <xsl:template name="half-title">
+    <fo:block font-size="32pt" span="all" text-align="center" margin-top="1.7in">
+      From Goulash to Gourmet
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template name="cover">
+    <fo:block span="all">
+      <fo:external-graphic src='url("file:///Users/ding0057/Dropbox/betty_dinger_cookbook/fop/images/cover_front.png")' content-width="scale-to-fit" content-height="100%" width="100%" scaling="uniform"/>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template name="cover-back">
+    <fo:block span="all">
+      <fo:external-graphic src='url("file:///Users/ding0057/Dropbox/betty_dinger_cookbook/fop/images/cover_back.png")' content-width="scale-to-fit" content-height="100%" width="100%" scaling="uniform"/>
+    </fo:block>
+  </xsl:template>
+
+  <xsl:template name="coverdescription">
+    <fo:block-container display-align="after">
+      <fo:block break-before="page" span="all" linefeed-treatment="preserve" font-size="9pt">
+        The front cover is a photo of Mother's personal recipe book.  Handwritten, mostly in Polish, it is a keepsake as precious as any family heirloom.
+
+        The back cover is an example of the traditional Polish art form called <fo:inline font-style="italic">wycinanki</fo:inline>. Very detailed designs are traced on thin glossy paper, folded one or more times, and then cut out.
+
+        Poles are known for their hospitality, and nothing expresses Polish hospitality better than the traditional Polish greeting:
+        "<fo:inline font-style="italic">Gość w Dom, Bog w Dóm</fo:inline>" (Guest in the house: God in the house)
+      </fo:block>
+    </fo:block-container>
+  </xsl:template>
+
+  <xsl:template name="dedication">
+    <fo:block break-before="page" span="all" margin-right="1.5in" margin-left="1.5in" margin-top="1in">
+      <fo:block font-size="12pt" margin-bottom=".1in">Dedication</fo:block>
+      <fo:block font-style="italic" font-family="Constantia" text-align="justify">
+        This cookbook is dedicated to the three women who influenced me most as I developed my cooking ability:
+        my mother, Karolina Wojtowicz; my mother-in-law, Bertha Dinger; and my adopted mother-in-law, Val Ruchie.
+        I also dedicate it to my husband, Fred, for always saying "Thank You" and telling me how good dinner was - even when it wasn't - and to my four children, Dave, Deb, Fred and Don, for "surviving" a lot of Goulash when times were hard and I had to stretch a pound of hamburger.  I love you all.
+      </fo:block>
+      <fo:block font-size="12pt" margin-top=".25in" text-align="right">- Betty Dinger (December 1999)</fo:block>
+    </fo:block>
+  </xsl:template>
+
   <xsl:template name="toc">
     <fo:block break-before="page" span="all" margin-left="2in" margin-right="2in">
       <fo:block font-size="16pt" text-align="center" margin-bottom=".25in">Table of Contents</fo:block>
@@ -67,7 +110,7 @@
   </xsl:template>
 
   <xsl:template name="paragraph" match="//p">
-    <fo:block span="all">
+    <fo:block span="all" margin-bottom=".1in">
       <xsl:value-of select="." />
     </fo:block>
   </xsl:template>
@@ -95,10 +138,29 @@
     </fo:block>
   </xsl:template>
 
+  <xsl:template name="index">
+    <fo:block break-before="page">
+      <fo:block font-size="16pt" span="all" border-bottom="solid .01in #000" margin-bottom=".1in">Index</fo:block>
+      <xsl:for-each select="//h1">
+        <xsl:sort select="."/>
+        <fo:block text-align-last="justify" font-size="10pt">
+          <fo:basic-link internal-destination="{generate-id(.)}">
+            <xsl:value-of select="." />
+            <fo:leader leader-pattern="dots" />
+            <fo:page-number-citation ref-id="{generate-id(.)}" />
+          </fo:basic-link>
+        </fo:block>
+      </xsl:for-each>
+    </fo:block>
+  </xsl:template>
+
   <xsl:template match="/cookbook">
     <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" font-family="Adobe Garamond Pro" font-size="11pt">
 
       <fo:layout-master-set>
+        <fo:simple-page-master master-name="cover" page-width="8.5in" page-height="5.5in">
+          <fo:region-body margin="0in" margin-bottom="0in" />
+        </fo:simple-page-master>
         <fo:simple-page-master master-name="frontmatter" page-width="8.5in" page-height="5.5in">
           <fo:region-body margin=".5in" margin-bottom=".75in" />
         </fo:simple-page-master>
@@ -108,12 +170,17 @@
         </fo:simple-page-master>
       </fo:layout-master-set>
 
+      <fo:page-sequence master-reference="cover" id="{generate-id(.)}">
+        <fo:flow flow-name="xsl-region-body">
+          <xsl:call-template name="cover"/>
+        </fo:flow>
+      </fo:page-sequence>
+
       <fo:page-sequence master-reference="frontmatter" id="{generate-id(.)}">
         <fo:flow flow-name="xsl-region-body">
-          <!--<xsl:call-template name="cover"/>-->
-          <!--<xsl:call-template name="half-title"/>-->
-          <!--<xsl:call-template name="coverdescription"/>-->
-          <!--<xsl:call-template name="dedication"/>-->
+          <xsl:call-template name="half-title"/>
+          <xsl:call-template name="coverdescription"/>
+          <xsl:call-template name="dedication"/>
           <xsl:call-template name="toc"/>
         </fo:flow>
       </fo:page-sequence>
@@ -127,6 +194,13 @@
             <xsl:sort select="category"/>
             <xsl:sort select="h1"/>
           </xsl:apply-templates>
+          <xsl:call-template name="index"/>
+        </fo:flow>
+      </fo:page-sequence>
+
+      <fo:page-sequence master-reference="cover" id="{generate-id(.)}">
+        <fo:flow flow-name="xsl-region-body">
+          <xsl:call-template name="cover-back"/>
         </fo:flow>
       </fo:page-sequence>
 
