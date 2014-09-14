@@ -33,3 +33,15 @@ Slice green ham and fry until lightly brown in a skillet. Fry green eggs.
 Serves 1.
 ```
 
+## Building a PDF
+
+The PDF generator depends on [Pandoc](http://johnmacfarlane.net/pandoc/) and [Apache FOP](http://xmlgraphics.apache.org/fop/).
+Both can be installed with Homebrew, but you'll need the newest snapshot of FOP if you want to use OTF fonts. They
+haven't released a binary update since 2012.
+
+- Install Pandoc: `brew install pandoc`
+- Install FOP snapshot (from within the `export` directory): `svn co http://svn.apache.org/repos/asf/xmlgraphics/fop/trunk/ fop`
+- Build FOP: `ant`
+
+Build (must be run from the `export` directory): `./build.sh`
+
