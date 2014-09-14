@@ -26,29 +26,44 @@
   </xsl:template>
 
   <xsl:template name="title" match="//h1">
-    <fo:block span="all" text-align="center" page-break-before="always" font-size="20pt" margin-bottom=".5in" font-family="Britannic Bold" id="{generate-id(.)}">
+    <fo:block span="all" text-align="center" page-break-before="always" font-size="20pt" margin-bottom=".25in" font-family="Britannic Bold" id="{generate-id(.)}">
       <xsl:value-of select="." />
     </fo:block>
   </xsl:template>
 
   <xsl:template name="h2" match="//h2">
-    <fo:block span="all">
-      <xsl:value-of select="." />
-    </fo:block>
-  </xsl:template>
-
-  <xsl:template name="ingredient-title" match="//h3">
-    <fo:block margin-bottom=".1in">
-      <xsl:value-of select="." />
+    <fo:block span="all" margin-bottom=".1in" margin-top=".25in" text-transform="uppercase">
+      <xsl:value-of select="." />:
     </fo:block>
   </xsl:template>
 
   <xsl:template name="ingredients" match="//ul">
-    <xsl:for-each select="li">
-      <fo:block>
-        <xsl:value-of select="." />
-      </fo:block>
-    </xsl:for-each>
+
+    <xsl:choose>
+      <xsl:when test="preceding-sibling::h3 != ''">
+        <fo:block keep-together="always">
+          <xsl:if test="preceding-sibling::h3 != ''">
+            <fo:block keep-together="always">
+              <fo:block text-transform="uppercase">
+                <xsl:value-of select="preceding-sibling::h3[1]" />
+              </fo:block>
+              <xsl:for-each select="li">
+                <fo:block>
+                  <xsl:value-of select="." />
+                </fo:block>
+              </xsl:for-each>
+            </fo:block>
+          </xsl:if>
+        </fo:block>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:for-each select="li">
+          <fo:block>
+            <xsl:value-of select="." />
+          </fo:block>
+        </xsl:for-each>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template name="paragraph" match="//p">
@@ -81,7 +96,7 @@
   </xsl:template>
 
   <xsl:template match="/cookbook">
-    <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
+    <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format" font-family="Adobe Garamond Pro" font-size="11pt">
 
       <fo:layout-master-set>
         <fo:simple-page-master master-name="frontmatter" page-width="8.5in" page-height="5.5in">
